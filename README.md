@@ -1,6 +1,6 @@
 # Fallout 4 Mod Configuration Menu
 
-[![Build status](https://ci.appveyor.com/api/projects/status/github/reg2k/f4mcm?branch=master&svg=true)](https://ci.appveyor.com/project/reg2k/f4mcm/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/fgsmfho4gjd11ulm?svg=true)](https://ci.appveyor.com/project/Kraken-collab/f4se-mcm)
 
 The Mod Configuration Menu is a settings page for mods!
 
