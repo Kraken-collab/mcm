@@ -1,4 +1,4 @@
-image: Visual Studio 2017
+image: Visual Studio 2022
 
 environment:
   PYTHON: C:\Python36-x64
@@ -8,8 +8,22 @@ init:
 
   - ps: |
       if ($env:APPVEYOR_REPO_TAG -eq 'true') {
-          $tagName = $env:APPVEYOR_REPO_TAG_NAME -replace "^v", ""
-          Update-AppveyorBuild -Version "$tagName.$env:APPVEYOR_BUILD_NUMBER"
+          $tag = $env:APPVEYOR_REPO_TAG_NAME
+
+          $cleanVersion = $tag -replace "^v", ""
+          Update-AppveyorBuild -Version "$cleanVersion.$env:APPVEYOR_BUILD_NUMBER"
+
+          if ($tag -match "-") {
+              $env:IS_PRERELEASE = "true"
+          } else {
+              $env:IS_PRERELEASE = "false"
+          }
+
+          if ($tag -match "draft") {
+              $env:IS_DRAFT = "true"
+          } else {
+              $env:IS_DRAFT = "false"
+          }
       }
 
 install:
@@ -17,7 +31,7 @@ install:
 
 build_script:
   - set PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
   - python --version
   - python build.py
 
@@ -32,7 +46,8 @@ deploy:
     auth_token:
       secure: lxxfA9UGPnXKXt3aGCdOmc3pkx7jNl7vaBVA215soTHb5cb55hBJ2ZReW2cmMLcQ
     artifact: DLL only
-    draft: false
+    draft: $(IS_DRAFT)           
+    prerelease: $(IS_PRERELEASE) 
     force_update: true
     on:
       appveyor_repo_tag: true
